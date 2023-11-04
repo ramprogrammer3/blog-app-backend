@@ -69,7 +69,7 @@ exports.login = async(req,res)=>{
 
         // check user is exist or not
 
-        const user = await User.findOne({email});
+        const user = await User.findOne({email}).populate("posts");
 
         if(!user){
             return res.status(404).json({

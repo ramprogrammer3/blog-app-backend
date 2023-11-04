@@ -2,6 +2,7 @@ require("dotenv").config();
 const express = require("express");
 const connection = require("./config/db");
 const userRoutes = require("./routes/userRoute");
+const postRoutes = require("./routes/postRoute");
 const cors = require("cors");
 const fileUploader = require("express-fileupload");
 const cookieParser = require('cookie-parser');
@@ -25,6 +26,9 @@ app.get("/",(req,res)=>{
 
 // routes
 app.use("/api/v1/user",userRoutes);
+
+// routes for post 
+app.use("/api/v1/post",postRoutes)
 
 // db connection
 connection();

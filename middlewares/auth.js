@@ -18,6 +18,7 @@ exports.auth = async(req,res,next)=>{
             // verifying token
             const decode = jwt.verify(token,'ramkumarsha256')
             req.user = decode;
+            console.log(decode)
             
         } catch (error) {
             // If JWT verification fails, return 401 Unauthorized response
@@ -25,7 +26,7 @@ exports.auth = async(req,res,next)=>{
             .status(401)
             .json({ success: false, message: "token is invalid" });
         }
-        
+
         next();
         
     } catch (error) {
