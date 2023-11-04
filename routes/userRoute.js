@@ -5,6 +5,8 @@ const {register,login,update,deleteUser} = require("../controllers/userControlle
 
 router.post("/register",register);
 router.post("/login",login)
+router.put('/update/:id',update)
+router.delete("/delete/:id",deleteUser);
 
 
 module.exports = router;

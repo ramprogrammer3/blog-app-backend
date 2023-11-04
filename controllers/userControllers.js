@@ -80,7 +80,7 @@ exports.login = async(req,res)=>{
 
         // compare password is correct or not
         
-        console.log("ram kuamr")
+        
         const checkPassword = await bcrypt.compare(password,user.password);
 
         if(!checkPassword){
@@ -120,9 +120,49 @@ exports.login = async(req,res)=>{
 
 }
 exports.update = async(req,res)=>{
+    try {
+        // find id from params
+        const id = req.params.id;
+        // fetch data from body;
+        const {name,email,password,image} = req.body;
+
+        // Todo to upload image to cloudinary
+        
+        // query for update user detials
+        const updateUser = await User.findByIdAndUpdate(id,{name,email,password,image},{new :true})
+
+        // return resposne  for successful update
+
+        return res.status(200).json({
+            success : true,
+            message : "User updated successfully",
+            updateUser
+        })
+      
+    } catch (error) {
+        return res.status(500).json({
+            success : false,
+            message : error.message
+        })
+    }
 
 }
 
 exports.deleteUser = async(req,res)=>{
+    try {
 
+        const id = req.params.id;
+
+            await User.findByIdAndDelete(id);
+
+            res.send({
+                message : "account delete successfully"
+            })
+  
+    } catch (error) {
+        return res.status(500).json({
+            success : false,
+            message : error.message
+        })
+    }
 }
