@@ -91,6 +91,21 @@ exports.updatePost = async(req,res)=>{
 
 exports.deletePost = async(req,res)=>{
     try {
+        const userId = req.user.id;
+        const id = req.params.id;
+
+        const updatedPost = await User.findByIdAndUpdate(userId,{$pull : {posts : id}},{new : true})
+
+        // delete post
+        await Post.findByIdAndDelete(id);
+
+        // return response
+        return res.status(200).json({
+            success : true,
+            message : "Post Deleted successfully",
+            updatedPost
+        })
+
         
     } catch (error) {
         return res.status(500).json({

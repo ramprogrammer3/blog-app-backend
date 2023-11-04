@@ -8,6 +8,6 @@ const {createPost,getAllPost,updatePost,deletePost} = require("../controllers/po
 router.post("/createPost",auth,createPost);
 router.get("/getAllPost",getAllPost);
 router.put("/updatePost/:id",auth,updatePost)
-router.put("/deletePost/:id",auth,deletePost);
+router.delete("/deletePost/:id",auth,deletePost);
 
 module.exports = router;
