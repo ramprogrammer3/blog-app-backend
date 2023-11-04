@@ -1,5 +1,6 @@
 require("dotenv").config();
 const express = require("express");
+const connection = require("./config/db");
 
 const app = express();
 
@@ -10,6 +11,9 @@ app.get("/",(req,res)=>{
     message  : "server is running , everything is fine "
    })
 })
+
+// db connection
+connection();
 
 app.listen(port,()=>{
     console.log(`server is running on port ${port}`);
