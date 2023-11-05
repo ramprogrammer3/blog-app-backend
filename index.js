@@ -12,7 +12,7 @@ const {cloudinaryConnect} = require("./config/cloudinary")
 
 const app = express();
 
-const port = process.env.port || 5000;
+const port = process.env.port || 4040;
 
 app.use(express.json({limit : '1024mb'}));
 app.use(cors());
