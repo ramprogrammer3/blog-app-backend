@@ -3,12 +3,14 @@ const User = require("../models/userModel");
 
 const bcrypt = require('bcrypt');
 const jwt = require("jsonwebtoken");
+const uploader = require("../uploader");
 
 exports.register = async(req,res)=>{
     try {
         // fetch data from req.body
         const {name, email,password} = req.body;
         // validate user input
+        
         if(!name || !email || !password){
             return res.status(400).json({
                 success :false,
@@ -29,8 +31,15 @@ exports.register = async(req,res)=>{
         const hashPassword = await bcrypt.hash(password,10);
 
         // Todo Upload image to cloudinary and append url in image 
+        let {image}  = req.body;
+        if(!image){
+            image = `https://api.dicebear.com/7.x/pixel-art/svg?seed=${name}`
+        }else{
+            const profileImage = await uploader(image,"blogApp",30);
+            image = profileImage.secure_url;
+        }
 
-        let image = `https://api.dicebear.com/7.x/pixel-art/svg?seed=${name}`
+ 
         // create user
         const user = await User.create({
             name,
@@ -124,9 +133,15 @@ exports.update = async(req,res)=>{
         // find id from params
         const id = req.params.id;
         // fetch data from body;
-        const {name,email,password,image} = req.body;
+        const {name,email,password} = req.body;
 
         // Todo to upload image to cloudinary
+        const {image} = req.body;
+
+        if(image){
+            const profileImage = await uploader(image,"blogApp",30);
+            image = profileImage.secure_url;
+        }
         
         // query for update user detials
         const updateUser = await User.findByIdAndUpdate(id,{name,email,password,image},{new :true})

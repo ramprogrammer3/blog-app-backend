@@ -1,5 +1,6 @@
 const User = require("../models/userModel");
 const Post = require("../models/postModel");
+const uploader = require("../uploader");
 exports.createPost = async(req,res)=>{
 
     try {
@@ -8,6 +9,11 @@ exports.createPost = async(req,res)=>{
         const {title,body} = req.body;
 
         // Todo Add image, upload from cloudinary
+        let {image} = req.body;
+        if(image){
+            const profileImage = await uploader(image,"blogApp",30);
+            image = profileImage.secure_url;
+        }
 
         // validating  data 
         if(!title || !body){
@@ -20,11 +26,12 @@ exports.createPost = async(req,res)=>{
         // creating new post 
         const newPost = await Post.create({
             title,
-            body
+            body,
+            postImage : image
         })
 
         // updating user posts
-        const updatedPost = await User.findByIdAndUpdate(req.user.id,{$push : {posts : newPost._id}},{new : true})
+        const updatedPost = await User.findByIdAndUpdate(req.user.id,{$push : {posts : newPost._id}},{new : true}).populate('posts').exec();
 
        // return response
        return res.status(200).json({
@@ -64,15 +71,20 @@ exports.getAllPost = async(req,res)=>{
 
 exports.updatePost = async(req,res)=>{
     try {
-        const userId = req.user.id;
         const id = req.params.id;
 
-        const {title,body,postImage} = req.body;
+        const {title,body} = req.body;
 
         // Todo upload image to cloudinary
+        const {image} = req.body;
+        if(image){
+            const profileImage = await uploader(image,"blogApp",30);
+            image = profileImage.secure_url;
+        }
+
         const updatedPost = await Post.findByIdAndUpdate(id,{
-            title,body,postImage
-        },{new : true})
+            title,body,postImage:image
+        },{new : true}).populate("likes").populate('comments').exec();
 
         // return resposne
         return res.status(200).json({
@@ -94,7 +106,7 @@ exports.deletePost = async(req,res)=>{
         const userId = req.user.id;
         const id = req.params.id;
 
-        const updatedPost = await User.findByIdAndUpdate(userId,{$pull : {posts : id}},{new : true})
+        const updatedPost = await User.findByIdAndUpdate(userId,{$pull : {posts : id}},{new : true}).populate("posts").exec();
 
         // delete post
         await Post.findByIdAndDelete(id);
