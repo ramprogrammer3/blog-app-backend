@@ -46,7 +46,7 @@ exports.getAllPost = async(req,res)=>{
     try {
 
         // get All Post 
-        const allPost = await Post.find({}).sort({createdAt : -1})
+        const allPost = await Post.find({}).sort({createdAt : -1}).populate("likes").populate("comments").exec();
          
         return res.status(200).json({
             success : true,

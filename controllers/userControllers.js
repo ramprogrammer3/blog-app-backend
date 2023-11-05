@@ -69,7 +69,7 @@ exports.login = async(req,res)=>{
 
         // check user is exist or not
 
-        const user = await User.findOne({email}).populate("posts");
+        const user = await User.findOne({email}).populate("posts").sort({createdAt : -1});
 
         if(!user){
             return res.status(404).json({
@@ -91,7 +91,7 @@ exports.login = async(req,res)=>{
         }
 
         // create token
-        const token = jwt.sign({email : user.email,id : user._id},"ramkumarsha256",{
+        const token = jwt.sign({email : user.email,id : user._id,name : user.name},"ramkumarsha256",{
             expiresIn : "30d"
         })
 
