@@ -126,3 +126,19 @@ exports.deletePost = async(req,res)=>{
         })
     }
 }
+
+exports.searchPost = async(req,res)=>{
+    const keyword = req.query.search ?
+    {
+        $or : [
+            {body : {$regex : req.query.search, $options : "i"}},
+            {title : {$regex : req.query.search, $options : "i"}},
+        ]
+        
+    }
+    :
+    {}
+
+    const posts = (await Post.find(keyword))
+    res.send(posts)
+}
