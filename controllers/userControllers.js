@@ -148,6 +148,8 @@ exports.update = async(req,res)=>{
 
         // return resposne  for successful update
 
+        updateUser.password = undefined;
+
         return res.status(200).json({
             success : true,
             message : "User updated successfully",
