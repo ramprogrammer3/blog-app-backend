@@ -144,7 +144,7 @@ exports.update = async(req,res)=>{
         }
         
         // query for update user detials
-        const updateUser = await User.findByIdAndUpdate(id,{name,email,password,image},{new :true})
+        const updateUser = await User.findByIdAndUpdate(id,{name,email,password,image},{new :true}).populate("posts").exec();
 
         // return resposne  for successful update
 
