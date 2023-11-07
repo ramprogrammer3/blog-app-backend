@@ -136,7 +136,7 @@ exports.update = async(req,res)=>{
         const {name,email,password} = req.body;
 
         // Todo to upload image to cloudinary
-        const {image} = req.body;
+        let {image} = req.body;
 
         if(image){
             const profileImage = await uploader(image,"blogApp",30);
