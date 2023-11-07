@@ -181,3 +181,26 @@ exports.deleteUser = async(req,res)=>{
         })
     }
 }
+
+exports.getAUser = async(req,res)=>{
+    try {
+
+        // get user id by paramsj or res ke body
+        const userId = req.user.id;
+        //get a user by id
+        const user = await User.findById(userId).populate("posts").exec();
+        // return resposne
+        res.status(200).json({
+            success : true,
+            message : "User data Found ",
+            user
+        })
+
+        
+    } catch (error) {
+        return res.status(500).json({
+            success : false,
+            message : error.message,
+        })
+    }
+}
