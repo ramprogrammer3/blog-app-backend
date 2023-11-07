@@ -144,7 +144,16 @@ exports.update = async(req,res)=>{
         }
         
         // query for update user detials
-        const updateUser = await User.findByIdAndUpdate(id,{name,email,password,image},{new :true}).populate("posts").exec();
+        const updateUser = await User.findByIdAndUpdate(id,{name,email,password,image},{new :true}).populate("posts").populate({
+            path : "posts",
+            populate : {
+                path : "likes"
+            },
+            populate : {
+                path : "comments"
+            }
+        }).exec();
+
 
         // return resposne  for successful update
 
