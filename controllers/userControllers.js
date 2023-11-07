@@ -147,14 +147,16 @@ exports.update = async(req,res)=>{
         const updateUser = await User.findByIdAndUpdate(id,{name,email,password,image},{new :true}).populate("posts").populate({
             path : "posts",
             populate : {
-                path : "likes",
-                model : "Like"
-            },
-            populate : {
                 path : "comments",
                 model : "Comment"
             }
-        }).exec();
+        }).populate({
+            path : "posts",
+            populate : {
+                path : "likes",
+                model : "Like"
+            }
+        })
 
 
         // return resposne  for successful update
